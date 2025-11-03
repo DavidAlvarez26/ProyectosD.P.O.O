@@ -14,7 +14,7 @@ import Usuarios.Organizador;
 import persistencia.PersistenciaDatos;
 import Finanzas.Rembolso;
 
-public class BoletaMaster {
+public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	private List<Usuario> usuarios;
 	private List<Evento> eventos;
 	private List<Venue> venues;
@@ -293,6 +293,42 @@ public class BoletaMaster {
 	                       ". Ganancia total: $" + reporte.getGananciasTotales());
 
 	    return reporte;
+	}
+
+	@Override
+	public void cargarSaldo(String login, double valor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean descontarSaldo(String login, double valor) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Tiquete buscarTiquete(String idTiquete) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void reservarTiquete(String idTiquete) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void liberarTiquete(String idTiquete) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marcarTiqueteVendido(String idTiquete) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -1,4 +1,4 @@
-package tests;
+package testProyecto1;
 import Usuarios.Cliente;
 import logica.BoletaMaster;
 import persistencia.PersistenciaDatos;
