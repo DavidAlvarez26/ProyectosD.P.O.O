@@ -34,6 +34,54 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	    this.administrador = null;
 	    this.persistencia = persistencia;
 	}
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
+
+	public List<Evento> getEventos() {
+		return eventos;
+	}
+
+	public void setEventos(List<Evento> eventos) {
+		this.eventos = eventos;
+	}
+
+	public List<Venue> getVenues() {
+		return venues;
+	}
+
+	public void setVenues(List<Venue> venues) {
+		this.venues = venues;
+	}
+
+	public List<Compra> getCompras() {
+		return compras;
+	}
+
+	public void setCompras(List<Compra> compras) {
+		this.compras = compras;
+	}
+
+	public List<Tiquete> getTiquetes() {
+		return tiquetes;
+	}
+
+	public void setTiquetes(List<Tiquete> tiquetes) {
+		this.tiquetes = tiquetes;
+	}
+
+	public Administrador getAdministrador() {
+		return administrador;
+	}
+
+	public void setAdministrador(Administrador administrador) {
+		this.administrador = administrador;
+	}
+	
 
     public void cargarDatos() {
         this.usuarios = persistencia.getPersistenciaUsuarios().cargarUsuarios("data/usuarios.txt");
@@ -330,7 +378,8 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+
 	
 	
 }

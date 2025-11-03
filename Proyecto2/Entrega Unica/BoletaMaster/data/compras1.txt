@@ -1,0 +1,3 @@
+C001;Juan Rodríguez;;2025-11-03;0.0;Tarjeta de crédito
+C002;Laura Torres;;2025-11-03;0.0;Efectivo
+C003;Juan Rodríguez;;2025-11-03;0.0;Transferencia

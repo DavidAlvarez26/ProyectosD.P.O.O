@@ -1,0 +1,4 @@
+E001;Concierto Coldplay;2025-11-30;20:00:00;Música;MovistarArena;María Gómez;VIP,General,Platea;Activo
+E002;Obra Hamlet;2025-12-15;19:30:00;Teatro;Teatro Colón;María Gómez;Preferencial,Balcón;Activo
+E003;Festival de Cine;2025-12-10;18:00:00;Cine;Cine Andino;María Gómez;Sala1,Sala2;Activo
+E004;Partido de Estrellas;2025-12-20;17:00:00;Deporte;Estadio El Campín;María Gómez;Norte,Sur,Occidental,Oriental;Cancelado
