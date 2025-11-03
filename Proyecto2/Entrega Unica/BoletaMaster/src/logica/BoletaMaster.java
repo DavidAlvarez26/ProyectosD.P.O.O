@@ -11,6 +11,7 @@ import Finanzas.ReporteFinanciero;
 import Usuarios.Administrador;
 import Usuarios.Cliente;
 import Usuarios.Organizador;
+import market.Marketplace;
 import persistencia.PersistenciaDatos;
 import Finanzas.Rembolso;
 
@@ -23,6 +24,7 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	@SuppressWarnings("unused")
 	private Administrador administrador;
 	private PersistenciaDatos persistencia;
+	private Marketplace marketplace;
 	
 	public BoletaMaster(List<Usuario> usuarios, List<Evento> eventos, List<Venue> venues, List<Compra> compra,
 			Administrador administrador, PersistenciaDatos persistencia) {
@@ -34,6 +36,23 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	    this.administrador = null;
 	    this.persistencia = persistencia;
 	}
+	
+	public PersistenciaDatos getPersistencia() {
+		return persistencia;
+	}
+
+	public void setPersistencia(PersistenciaDatos persistencia) {
+		this.persistencia = persistencia;
+	}
+
+	public Marketplace getMarketplace() {
+		return marketplace;
+	}
+
+	public void setMarketplace(Marketplace marketplace) {
+		this.marketplace = marketplace;
+	}
+
 	public List<Usuario> getUsuarios() {
 		return usuarios;
 	}

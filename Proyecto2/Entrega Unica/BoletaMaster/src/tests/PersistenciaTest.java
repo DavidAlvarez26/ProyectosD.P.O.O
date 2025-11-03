@@ -13,11 +13,8 @@ class PersistenciaTest {
     public void testCargarDatos() {
         PersistenciaDatos persistencia = new PersistenciaDatos();
         BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
-
-        // Ejecutar método de carga
         sistema.cargarDatos();
-
-        // Validar que las listas no sean null y tengan datos
+        
         assertNotNull(sistema.getUsuarios(), "Usuarios no cargados");
         assertTrue(sistema.getUsuarios().size() > 0, "No se cargaron usuarios");
 
@@ -30,7 +27,7 @@ class PersistenciaTest {
         assertNotNull(sistema.getTiquetes(), "Tiquetes no cargados");
         assertTrue(sistema.getTiquetes().size() > 0, "No se cargaron tiquetes");
 
-        System.out.println("✅ Test de carga de datos exitoso");
+        System.out.println("Test de carga de datos exitoso");
     }
     @Test
     public void testGuardarYCargarDatos() {
@@ -39,17 +36,13 @@ class PersistenciaTest {
         
         sistemaOriginal.cargarDatos();
         sistemaOriginal.guardarDatos();
-
-        // Crear nuevo sistema para cargar desde archivo
         BoletaMaster sistemaCopia = new BoletaMaster(null, null, null, null, null, persistencia);
         sistemaCopia.cargarDatos();
-
-        // Comparar tamaños
         assertEquals(sistemaOriginal.getUsuarios().size(), sistemaCopia.getUsuarios().size());
         assertEquals(sistemaOriginal.getEventos().size(), sistemaCopia.getEventos().size());
         assertEquals(sistemaOriginal.getTiquetes().size(), sistemaCopia.getTiquetes().size());
         assertEquals(sistemaOriginal.getVenues().size(), sistemaCopia.getVenues().size());
 
-        System.out.println("✅ Test de guardar + cargar exitoso");
+        System.out.println("Test de guardar + cargar exitoso");
     }
 }
