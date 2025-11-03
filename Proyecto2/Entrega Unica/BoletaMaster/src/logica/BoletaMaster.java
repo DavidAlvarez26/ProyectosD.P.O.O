@@ -378,12 +378,4 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 		// TODO Auto-generated method stub
 		
 	}
-<<<<<<< HEAD
-
-
-=======
-	
->>>>>>> origin/main
-	
-	
 }
