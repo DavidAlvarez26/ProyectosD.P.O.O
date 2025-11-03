@@ -1,0 +1,3 @@
+C001;Juan Rodríguez;TQ001,TQ002;2025-10-10;240000;Tarjeta de crédito
+C002;Laura Torres;TQ003;2025-10-11;120000;Efectivo
+C003;Juan Rodríguez;TQ004,TQ005,TQ006;2025-10-12;360000;Transferencia

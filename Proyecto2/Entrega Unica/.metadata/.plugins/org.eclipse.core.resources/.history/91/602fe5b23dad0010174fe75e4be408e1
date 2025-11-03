@@ -1,0 +1,24 @@
+package tests;
+
+import Usuarios.Cliente;
+import logica.BoletaMaster;
+import logica.Evento;
+import logica.Localidad;
+import persistencia.PersistenciaDatos;
+
+public class TestCompraTiquetes {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        Cliente cliente = (Cliente) sistema.buscarUsuario("cliente01");
+        Evento evento = sistema.buscarEvento("E001");
+        Localidad localidad = evento.getLocalidades().get(0); 
+
+        System.out.println("🟢 Simulando compra de tiquetes para " + cliente.getNombre());
+        sistema.comprarTiquete(cliente, evento, localidad, 2);
+
+        System.out.println("Compra completada. Nuevo saldo: $" + cliente.getSaldo());
+    }
+}

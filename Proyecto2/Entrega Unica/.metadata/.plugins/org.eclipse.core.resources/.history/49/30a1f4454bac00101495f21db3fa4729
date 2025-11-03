@@ -1,0 +1,66 @@
+package Usuarios;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import Finanzas.Oferta;
+import Finanzas.ReporteFinanciero;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+import logica.Usuario;
+import logica.Venue;
+
+public class Organizador extends Usuario{
+	private List<Evento> eventosOrganizados;
+
+	public Organizador(String login, String contrasena, String nombre, String correo, double saldo,List<Evento> eventosOrganizados) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.eventosOrganizados=(eventosOrganizados != null) ? eventosOrganizados : new ArrayList<>();
+	}
+
+	@Override
+	protected boolean autenticar(String contrasena) {
+		return this.getContrasena().equals(contrasena);
+	}
+
+	@Override
+	public double consultarSaldo() {
+		return getSaldo();
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		this.saldo += monto;
+		
+	}
+    public List<Evento> getEventosOrganizados() {
+        return eventosOrganizados;
+    }
+
+    public void agregarEvento(Evento evento) {
+        if (evento != null && !eventosOrganizados.contains(evento)) {
+            eventosOrganizados.add(evento);
+        }
+    }
+	public void proponerVenue(Venue venue) {
+		//TODO
+		BoletaMaster.proponerVenue
+	}
+	public void crearEvento(Evento evento) {
+		//TODO PONER CONDICION SI NO EXITER CON BOLETAMASTER.BUSCAREVENTO
+		BoletaMaster.agregarEvento
+	}
+	public ReporteFinanciero consultarEstadoFinancieros () {
+		//TODO
+		return BoletaMaster.generarReporteFinanciero.calculargananciasxOrganizador(usuario)
+	}
+	public Oferta crearOferta(Localidad localidad,double descuento, Date fechaInicio,Date fechaFin){
+		return new Oferta(descuento, fechaFin, fechaFin);
+	}
+	public void comprarComoCliente(Evento evento, Localidad localidad, int cantidad) {
+		//TODO
+		BoletaMaster.comprarTiquete
+	}
+}

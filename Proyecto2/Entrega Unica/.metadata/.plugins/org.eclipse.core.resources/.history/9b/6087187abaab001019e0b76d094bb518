@@ -1,0 +1,59 @@
+package Tiquetes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Usuarios.Cliente;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+
+public class TiqueteMultiple extends Tiquete{
+
+	public List<TiqueteBasico> subTiquetes;
+	public double precioPaquete;
+	
+	
+	public TiqueteMultiple(double cargoServicio, double cuotaAdicional, int idTiquete,
+            Evento evento, Cliente comprador, Localidad localidad,
+            String estado, boolean transferible) {
+			super(cargoServicio, cuotaAdicional, idTiquete, evento, comprador, localidad, estado, transferible);
+			this.subTiquetes = new ArrayList<>();
+	}
+
+	@Override
+	public double calcularPrecioTotal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean esTransferible() {
+        for (TiqueteBasico t : subTiquetes) {
+            if (!t.esTransferible()) return false;
+        }
+        return true;
+	}
+
+	@Override
+	public void marcarComoTranferido() {
+		this.estado = "Transferido";
+        for (TiqueteBasico t : subTiquetes) {//ahora marca transferido los subtiquetes
+            t.marcarComoTranferido();
+        }
+		
+	}
+	public void agregarSubTiquete(TiqueteBasico tiquete) {
+		subTiquetes.add(tiquete);
+	}
+	public double calcularPrecioPaquete() {
+	    double total = 0;
+	    for (TiqueteBasico t : subTiquetes) {
+	        total += t.calcularPrecioTotal();
+	    }
+	    this.precioPaquete = total;
+	    return total;
+	}
+
+}
+

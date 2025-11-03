@@ -1,0 +1,115 @@
+package logica;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import Finanzas.Oferta;
+
+public class Localidad {
+	private String nombre;
+	private double precioBase;
+	private boolean numerada;
+	private int capacidad;
+	private List<Tiquete> tiquetes;
+	private Oferta descuento;
+	
+	public Localidad(String nombre, double precioBase, boolean numerada, int capacidad, List<Tiquete> tiquetes,
+			Oferta descuento) {
+		this.nombre = nombre;
+		this.precioBase = precioBase;
+		this.numerada = numerada;
+		this.capacidad = capacidad;
+		if (tiquetes != null) {
+		    this.tiquetes = tiquetes;
+		} else {
+		    this.tiquetes = new ArrayList<>();
+		}
+		this.descuento = descuento;
+		}
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public double getPrecioLocalidad() {//Este es el mismo de get precio base pero aplica la oferta si se requiere
+	    if (descuento != null && descuento.esVigente()) {
+	        return descuento.aplicarDescuento(precioBase);
+	    }
+	    return precioBase;
+	}
+
+	public void setPrecioBase(double precioBase) {
+		this.precioBase = precioBase;
+	}
+
+	public boolean isNumerada() {
+		return numerada;
+	}
+
+	public void setNumerada(boolean numerada) {
+		this.numerada = numerada;
+	}
+
+	public int getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+
+	public List<Tiquete> getTiquetes() {
+		return tiquetes;
+	}
+
+	public void setTiquetes(List<Tiquete> tiquetes) {
+		this.tiquetes = tiquetes;
+	}
+
+	public Oferta getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Oferta descuento) {
+		this.descuento = descuento;
+	}
+
+	public void agregarTiquete(Tiquete tiquete) {
+		if (tiquete != null && !tiquetes.contains(tiquete)) {
+            tiquetes.add(tiquete);
+        }
+		
+	}
+    public List<Tiquete> obtenerTiquetesDisponibles() {
+        List<Tiquete> disponibles = new ArrayList<>();
+        for (Tiquete t : tiquetes) {
+            if (t.getEstado().equalsIgnoreCase("Disponible")) {
+                disponibles.add(t);
+            }
+        }
+        return disponibles;
+    }
+	public void aplicarOferta(Oferta oferta) {
+	    if (oferta != null && oferta.esVigente()) {
+	        this.descuento = oferta;
+	        this.precioBase = oferta.aplicarDescuento(precioBase);
+	    }
+
+	}
+	public int calcularCapacidadDisponible() {
+		int vendidos=0;
+        for (Tiquete t : tiquetes) {
+            if (!t.getEstado().equalsIgnoreCase("Disponible")) {
+                vendidos++;
+            }
+        }
+        return capacidad - vendidos;
+    }
+	
+}	
+
+	

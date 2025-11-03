@@ -1,0 +1,57 @@
+package Usuarios;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import logica.Tiquete;
+import logica.Usuario;
+
+public class Cliente extends Usuario{
+	private List<Tiquete> tiquetes;
+	
+	public Cliente(String login, String contrasena, String nombre, String correo, double saldo,List<Tiquete> tiquetes) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.tiquetes=(tiquetes != null) ? tiquetes : new ArrayList<>();
+	}
+	
+	@Override
+	protected boolean autenticar(String contrasena) {
+		return this.getContrasena().equals(contrasena);
+	}
+
+	@Override
+	public double consultarSaldo() {
+		//TODO
+		return getSaldo();
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		this.saldo+=monto;
+		
+	}
+	public void comprarTiquete(Evento evento,Localidad localidad, int cantidad) {
+		//TODO
+		BoletaMaster.comprarTiquete
+	}
+	public void transferirTiquete(Tiquete tiquete, Cliente receptor) {
+		//TODO
+		BoletaMaster.transferirTiquete
+	}
+	public List<Tiquete> consultarTiquetesActivos(){
+		
+        List<Tiquete> activos = new ArrayList<>();
+        for (Tiquete t : tiquetes) {
+            if (t.getEstado().equalsIgnoreCase("Disponible")) {
+                activos.add(t);
+            }
+        }
+        return activos;
+    }
+	
+	public void solicitarRembolso(Tiquete tiquete, String motivo) {
+		//TODO
+		BoletaMaster.procesarReembolso
+	}
+
+}

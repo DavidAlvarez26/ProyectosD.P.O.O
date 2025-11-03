@@ -1,0 +1,21 @@
+package persistencia;
+
+import java.util.List;
+
+import logica.Venue;
+
+public class PersistenciaVenues implements IPersistenciaVenues {
+
+	@Override
+	public List<Venue> cargarVenues(String archivo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void guardarVenues(String archivo, List<Venue> Venues) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

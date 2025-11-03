@@ -1,0 +1,52 @@
+package Usuarios;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import logica.Evento;
+import logica.ReporteFinanciero;
+import logica.Tiquete;
+import logica.Usuario;
+import logica.Venue;
+
+public class Organizador extends Usuario{
+	public List<Evento> eventosOrganizados;
+
+	public Organizador(String login, String contrasena, String nombre, String correo, double saldo,List<Evento> eventosOrganizados) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.eventosOrganizados=new ArrayList<>();
+	}
+
+	@Override
+	protected boolean autenticar(String contrasena) {
+		// TODO 
+		return false;
+	}
+
+	@Override
+	public double consultarSaldo() {
+		// TODO 
+		return 0;
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		// TODO 
+		
+	}
+	public void proponerVenue(Venue venue) {
+		//TODO
+	}
+	public void crearEvento(Evento evento) {
+		//TODO
+	}
+	public ReporteFinanciero consultarEstadoFinancieros () {
+		//TODO
+	}
+	public List<Tiquete> consultarTiquetesActivos(){
+		//TODO
+	}
+	public void solicitarRembolso(Tiquete tiquete, String motivo) {
+		//TODO
+	}
+}

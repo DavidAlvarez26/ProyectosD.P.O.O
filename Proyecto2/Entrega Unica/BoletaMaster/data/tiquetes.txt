@@ -1,0 +1,8 @@
+TQ001;Concierto Coldplay;2025-03-20;VIP;Juan Rodríguez;150000;5000;2000;true;Vendido
+TQ002;Concierto Coldplay;2025-03-20;General;Laura Torres;90000;4000;1500;true;Vendido
+TQ003;Obra Hamlet;2025-04-15;Preferencial;Juan Rodríguez;120000;4000;2000;false;Vendido
+TQ004;Festival de Cine;2025-02-10;Sala1;Juan Rodríguez;80000;3000;1000;true;Vendido
+TQ005;Partido Selección Colombia;2025-06-12;Occidental;Carlos Pérez;180000;6000;2500;true;Vendido
+TQ006;Partido Selección Colombia;2025-06-12;Norte;Laura Torres;95000;4000;2000;true;Vendido
+TQ007;Festival Rock al Parque;2025-07-03;Zona A;Juan Rodríguez;100000;5000;1500;true;Vendido
+TQ008;Festival Rock al Parque;2025-07-03;Zona B;Laura Torres;80000;4000;1500;true;Vendido

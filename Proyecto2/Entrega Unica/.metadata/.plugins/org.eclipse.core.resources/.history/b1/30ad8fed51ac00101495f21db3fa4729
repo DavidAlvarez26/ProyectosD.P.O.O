@@ -1,0 +1,10 @@
+package logica;
+
+public class Venue {
+	private String ubicacion;
+	private int capacidadMax;
+	private String idvenue;
+	private String nombre;
+	private boolean aprobado;
+	
+}

@@ -1,0 +1,106 @@
+package Finanzas;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import Usuarios.Organizador;
+import logica.Evento;
+import logica.Tiquete;
+
+public class ReporteFinanciero {
+	private double gananciasTotales;
+	private Map<Evento,Double> gananciasxEvento;
+	private Map<Organizador,Double> gananciasxOrganizador;
+	
+	
+	public ReporteFinanciero(double gananciasTotales, Map<Evento, Double> gananciasxEvento,
+			Map<Evento, Double> gananciasxOrganizador) {
+		 this.gananciasTotales = 0;
+	     this.gananciasxEvento = new HashMap<>();
+	     this.gananciasxOrganizador = new HashMap<>();;
+	    
+	}
+    public double getGananciasTotales() {
+        return gananciasTotales;
+    }
+
+    public Map<Evento, Double> getGananciasxEvento() {
+        return gananciasxEvento;
+    }
+
+    public Map<Organizador, Double> getGananciasxOrganizador() {
+        return gananciasxOrganizador;
+    }
+    public double calcularGananciasTotales(List<Evento> eventos, List<Compra> compras) {
+        double total = 0;
+
+        for (Compra compra : compras) {
+            total += compra.getValorTotal();
+        }
+
+        this.gananciasTotales = total;
+        return total;
+    }
+    public double calcularGananciasPorEvento(Evento evento, List<Compra> compras) {
+        double totalEvento = 0;
+
+        for (Compra compra : compras) {
+            if (compra.getTiquetesComprados() == null) continue; 
+
+            for (Tiquete t : compra.getTiquetesComprados()) {
+                if (t != null && t.getEvento() != null && t.getEvento().equals(evento)) {
+                    totalEvento += t.calcularPrecioTotal();
+                }
+            }
+        }
+
+        gananciasxEvento.put(evento, totalEvento);
+        return totalEvento;
+    }
+    public double calcularGananciasPorOrganizador(Organizador organizador, List<Compra> compras) {
+        double totalOrg = 0;
+
+        for (Compra compra : compras) {
+            if (compra.getTiquetesComprados() == null) continue;
+
+            for (Tiquete t : compra.getTiquetesComprados()) {
+                if (t != null && t.getEvento() != null &&
+                    t.getEvento().getOrganizador() != null &&
+                    t.getEvento().getOrganizador().equals(organizador)) {
+                    totalOrg += t.calcularPrecioTotal();
+                }
+            }
+        }
+
+        gananciasxOrganizador.merge(organizador, totalOrg, Double::sum);
+        return totalOrg;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("GANANCIAS TOTALES: $").append(gananciasTotales).append("\n");
+
+        sb.append("\nGanancias por evento:\n");
+        if (gananciasxEvento == null || gananciasxEvento.isEmpty()) {
+            sb.append(" - No hay registros de eventos con ganancias.\n");
+        } else {
+            for (Map.Entry<Evento, Double> e : gananciasxEvento.entrySet()) {
+                sb.append(" - ").append(e.getKey().getNombre())
+                  .append(": $").append(e.getValue()).append("\n");
+            }
+        }
+
+        sb.append("\nGanancias por organizador:\n");
+        if (gananciasxOrganizador == null || gananciasxOrganizador.isEmpty()) {
+            sb.append(" - No hay registros de organizadores con ganancias.\n");
+        } else {
+            for (Map.Entry<Organizador, Double> o : gananciasxOrganizador.entrySet()) {
+                sb.append(" - ").append(o.getKey().getNombre())
+                  .append(": $").append(o.getValue()).append("\n");
+            }
+        }
+
+        return sb.toString();
+    }
+}

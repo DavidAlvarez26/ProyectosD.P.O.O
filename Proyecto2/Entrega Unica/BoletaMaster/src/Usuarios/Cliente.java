@@ -1,0 +1,67 @@
+package Usuarios;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import logica.BoletaMaster;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+import logica.Usuario;
+
+public class Cliente extends Usuario{
+	private List<Tiquete> tiquetes;
+	
+	public Cliente(String login, String contrasena, String nombre, String correo, double saldo,List<Tiquete> tiquetes) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.tiquetes=(tiquetes != null) ? tiquetes : new ArrayList<>();
+	}
+	
+	@Override
+	protected boolean autenticar(String contrasena) {
+		return this.getContrasena().equals(contrasena);
+	}
+
+	@Override
+	public double consultarSaldo() {
+		//TODO
+		return getSaldo();
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		this.saldo = this.saldo + monto;
+		
+	}
+    public List<Tiquete> getTiquetes() {
+        return tiquetes;
+    }
+
+    public void agregarTiquete(Tiquete t) {
+        tiquetes.add(t);
+    }
+	public void comprarTiquete(BoletaMaster sistema, Evento evento,Localidad localidad, int cantidad) {
+	
+		sistema.comprarTiquete(this,evento,localidad,cantidad);
+	}
+	public void transferirTiquete(BoletaMaster sistema,Tiquete tiquete, Cliente receptor) {
+	
+		sistema.transferirTiquete(this, receptor, tiquete);
+	}
+	public List<Tiquete> consultarTiquetesActivos(){
+		
+        List<Tiquete> activos = new ArrayList<>();
+        for (Tiquete t : tiquetes) {
+            if (t.getEstado().equalsIgnoreCase("Disponible")) {
+                activos.add(t);
+            }
+        }
+        return activos;
+    }
+	
+	public void solicitarRembolso(BoletaMaster sistema,Tiquete tiquete, String motivo) {
+	
+		sistema.procesarReembolso(tiquete, this, motivo);
+	}
+
+}

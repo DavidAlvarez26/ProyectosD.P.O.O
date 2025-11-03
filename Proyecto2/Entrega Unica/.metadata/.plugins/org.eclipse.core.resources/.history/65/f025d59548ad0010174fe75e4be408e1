@@ -1,0 +1,49 @@
+package tests;
+
+
+import Usuarios.Cliente;
+import logica.BoletaMaster;
+import logica.Tiquete;
+import persistencia.PersistenciaDatos;
+
+import java.util.List;
+
+import Tiquetes.TiqueteBasico;
+
+
+public class TestConsultaTiquetesActivos {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        Cliente cliente = (Cliente) sistema.buscarUsuario("cliente01");
+
+        // 🔹 Simulamos que el cliente ya tiene tiquetes activos
+        for (int i = 1; i <= 3; i++) {
+            Tiquete t = new TiqueteBasico(
+                10000, 2000, i, 
+                sistema.buscarEvento("E001"), // evento Coldplay
+                cliente, 
+                sistema.buscarEvento("E001").getLocalidades().get(0),
+                "Activo", true, "A" + i
+            );
+            cliente.getTiquetes().add(t);
+        }
+
+        // 🔹 Ejecutamos la consulta
+        List<Tiquete> activos = cliente.consultarTiquetesActivos();
+
+        System.out.println("\n===== TIQUETES ACTIVOS =====");
+        if (activos.isEmpty()) {
+            System.out.println("El cliente no tiene tiquetes activos.");
+        } else {
+            for (Tiquete t : activos) {
+                System.out.println("ID: " + t.getIdTiquete() +
+                                   " | Evento: " + t.getEvento().getNombre() +
+                                   " | Localidad: " + t.getLocalidad().getNombre() +
+                                   " | Estado: " + t.getEstado());
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+package Tiquetes;
+
+import java.sql.Date;
+import java.util.List;
+
+import Usuarios.Cliente;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+
+public class TiqueteMultiple extends Tiquete{
+
+	public List<TiqueteBasico> subTiquetes;
+	public double precioPaquete;
+	
+	
+	public TiqueteMultiple(double precioBase, double cargoServicio, double cuotaAdicional, int idTiquete,
+			Date fechaEvento, Evento evento, Cliente comprador, Localidad localidad, String estado,
+			boolean tranferible) {
+		super(precioBase, cargoServicio, cuotaAdicional, idTiquete, fechaEvento, evento, comprador, localidad, estado,
+				tranferible);
+		this.subTiquetes=n
+	}
+
+	@Override
+	public double calcularPrecioTotal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean esTransferible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void marcarComoTranferido() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void agregarSubTiquete(tiqueteBasico)
+
+}

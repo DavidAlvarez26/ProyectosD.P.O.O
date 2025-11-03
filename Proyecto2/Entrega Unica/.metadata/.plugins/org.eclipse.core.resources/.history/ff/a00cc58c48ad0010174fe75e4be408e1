@@ -1,0 +1,33 @@
+package tests;
+
+
+import Usuarios.Cliente;
+import logica.BoletaMaster;
+import logica.Tiquete;
+import persistencia.PersistenciaDatos;
+
+import java.util.List;
+
+
+public class TestConsultaTiquetesActivos {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        Cliente cliente = (Cliente) sistema.buscarUsuario("cliente01");
+
+        List<Tiquete> activos = cliente.consultarTiquetesActivos();
+
+        System.out.println("\n===== TIQUETES ACTIVOS =====");
+        if (activos.isEmpty()) {
+            System.out.println("El cliente no tiene tiquetes activos.");
+        } else {
+            for (Tiquete t : activos) {
+                System.out.println("ID: " + t.getIdTiquete() +
+                                   " | Evento: " + t.getEvento().getNombre() +
+                                   " | Estado: " + t.getEstado());
+            }
+        }
+    }
+}

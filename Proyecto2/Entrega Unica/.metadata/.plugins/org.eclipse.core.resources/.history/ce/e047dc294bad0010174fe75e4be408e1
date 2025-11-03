@@ -1,0 +1,44 @@
+package presentacion;
+
+
+
+import logica.*;
+import persistencia.PersistenciaDatos;
+import Usuarios.Cliente;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        System.out.println("=== BoletaMaster ===");
+        System.out.println("1. Consultar catálogo");
+        System.out.println("2. Comprar tiquete");
+        System.out.println("3. Consultar tiquetes activos");
+        System.out.println("4. Salir");
+
+        int opcion = sc.nextInt();
+        switch (opcion) {
+            case 1 -> { sistema.consultarCatalogoEventos(null, null, null)
+                .forEach(e -> System.out.println(" - " + e.getNombre())); }
+            case 2 -> { 
+                Cliente c = (Cliente) sistema.buscarUsuario("juan123");
+                sistema.comprarTiquete(c, sistema.buscarEvento("E001"), 
+                    sistema.buscarEvento("E001").getLocalidades().get(0), 1);
+            }
+            case 3 -> {
+                Cliente c = (Cliente) sistema.buscarUsuario("juan123");
+                c.consultarTiquetesActivos().forEach(t -> 
+                    System.out.println(" - " + t.getEvento().getNombre() + " (" + t.getEstado() + ")"));
+            }
+            default -> System.out.println("Adios");
+        }
+
+        sc.close();
+    }
+}
+
+//TODO

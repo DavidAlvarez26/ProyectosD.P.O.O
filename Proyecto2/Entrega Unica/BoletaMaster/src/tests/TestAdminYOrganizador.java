@@ -1,0 +1,41 @@
+package tests;
+
+import Usuarios.Administrador;
+import Usuarios.Organizador;
+import logica.*;
+import persistencia.PersistenciaDatos;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestAdminYOrganizador {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(
+            new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+            new ArrayList<>(), null, persistencia
+        );
+        sistema.cargarDatos();
+
+        Administrador admin = new Administrador("admin1", "1234", "Carlos Admin", "admin@mail.com", 0, 1000, null);
+        Organizador org = new Organizador("organizador01", "abcd", "María Gómez", "maria@eventos.com", 5000, new ArrayList<>());
+
+        //Proponer Venue
+        Venue nuevoVenue = new Venue("Calle", 1000, "V005", "Uniandes", false);
+        sistema.proponerVenue(org, nuevoVenue);
+
+        //Aprobar Venue
+        sistema.aprobarVenue(admin, nuevoVenue, true);
+
+        //Crear Evento
+        List<Localidad> locs = new ArrayList<>();
+        Evento nuevoEvento = new Evento("E010", "Expo Tecnología", Date.valueOf("2025-12-10"),Time.valueOf("14:00:00"), "Exposición", nuevoVenue, org, locs, "Activo");
+        sistema.crearEvento(org, nuevoEvento);
+
+        //Generar Reporte Financiero
+        System.out.println("\n===== REPORTE FINANCIERO =====");
+        System.out.println(sistema.generarReporteFinanciero(admin));
+    }
+}

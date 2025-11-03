@@ -1,0 +1,91 @@
+package logica;
+
+import java.util.List;
+
+public class Localidad {
+	private String nombre;
+	private double precioBase;
+	private boolean numerada;
+	private int capacidad;
+	private List<Tiquete> tiquetes;
+	private Oferta descuento;
+	
+	public Localidad(String nombre, double precioBase, boolean numerada, int capacidad, List<Tiquete> tiquetes,
+			Oferta descuento) {
+		this.nombre = nombre;
+		this.precioBase = precioBase;
+		this.numerada = numerada;
+		this.capacidad = capacidad;
+		this.tiquetes = tiquetes;// revisar esto
+		this.descuento = descuento;
+		}
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public double getPrecioBase() {
+		return precioBase;
+	}
+
+	public void setPrecioBase(double precioBase) {
+		this.precioBase = precioBase;
+	}
+
+	public boolean isNumerada() {
+		return numerada;
+	}
+
+	public void setNumerada(boolean numerada) {
+		this.numerada = numerada;
+	}
+
+	public int getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+
+	public List<Tiquete> getTiquetes() {
+		return tiquetes;
+	}
+
+	public void setTiquetes(List<Tiquete> tiquetes) {
+		this.tiquetes = tiquetes;
+	}
+
+	public Oferta getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(Oferta descuento) {
+		this.descuento = descuento;
+	}
+
+	public void agregarTiquete(Tiquete tiquete) {
+		//TODO
+		
+	}
+	public List<Tiquete>obtenerTiquetesDisponibles(){
+		//TODO
+		return
+			
+	}
+	public void aplicarOferta(Oferta oferta) {
+		//TODO aplique descuento directamente al precio base
+	}
+	public int calcularCapacidadDisponible() {
+		//TODO
+		return
+	}
+	
+	
+}	
+
+	
