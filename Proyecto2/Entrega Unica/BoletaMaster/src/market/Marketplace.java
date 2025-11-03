@@ -11,167 +11,158 @@ import logica.IPuertoTiquetes;
 import logica.IPuertoUsuarios;
 import logica.Tiquete;
 
+
 public class Marketplace {
 
-	private List<OfertaMarket> ofertas;
-	private List<ContraOferta> contraofertas;
-	private List<Log> logs;
+    private List<OfertaMarket> ofertas;
+    private List<ContraOferta> contraofertas;
+    private List<Log> logs;
 
-	private IPuertoUsuarios usuarios;
-	private IPuertoTiquetes tiquetes;
+    private IPuertoUsuarios usuarios;
+    private IPuertoTiquetes tiquetes;
 
-	private int nextIdOferta = 1;
-	private int nextIdContra = 1;
+    private int nextIdOferta = 1;
+    private int nextIdContra = 1;
 
-	public Marketplace(IPuertoUsuarios usuarios, IPuertoTiquetes tiquetes) {
-		this.ofertas = new ArrayList<>();
-		this.contraofertas = new ArrayList<>();
-		this.logs = new ArrayList<>();
-		this.usuarios = usuarios;
-		this.tiquetes = tiquetes;
-	}
+    public Marketplace(List<OfertaMarket> ofertas,List<ContraOferta> contraofertas, List<Log> logs,IPuertoUsuarios usuarios, IPuertoTiquetes tiquetes) {
+        this.ofertas = new ArrayList<>();
+        this.contraofertas = new ArrayList<>();
+        this.logs = new ArrayList<>();
+        this.usuarios = usuarios;
+        this.tiquetes = tiquetes;
+    }
 
-	private void log(TipoLog tipo, String actor, int id, String detalle) {
-		logs.add(new Log(tipo, actor, id, detalle));
-	}
+    private void log(TipoLog tipo, String actor, int id, String detalle) {
+        logs.add(new Log(tipo, actor, id, detalle));
+    }
 
-	private OfertaMarket buscarOferta(int id) {
-		for (OfertaMarket o : ofertas)
-			if (o.getIdOferta() == id)
-				return o;
-		return null;
-	}
+    private OfertaMarket buscarOferta(int id) {
+        for (OfertaMarket o : ofertas)
+            if (o.getIdOferta() == id) return o;
+        return null;
+    }
+    public OfertaMarket crearOferta(Cliente vendedor, int idTiquete, double precio) {
+        Tiquete t = tiquetes.buscarTiquete(idTiquete);
 
-	public OfertaMarket crearOferta(Cliente vendedor, int idTiquete, double precio) {
-		Tiquete t = tiquetes.buscarTiquete(idTiquete);
+        if (t == null) throw new IllegalArgumentException("Tiquete no existe");
+        if (!t.getComprador().equals(vendedor)) throw new IllegalArgumentException("No eres el dueño");
+        if (!t.esTransferible()) throw new IllegalArgumentException("Tiquete no transferible");
 
-		if (t == null)
-			throw new IllegalArgumentException("Tiquete no existe");
-		if (!t.getComprador().equals(vendedor))
-			throw new IllegalArgumentException("No eres el dueño");
-		if (!t.esTransferible())
-			throw new IllegalArgumentException("Tiquete no transferible");
+        tiquetes.reservarTiquete(idTiquete);
 
-		tiquetes.reservarTiquete(idTiquete);
+        OfertaMarket o = new OfertaMarket(nextIdOferta++, t, vendedor, precio);
+        ofertas.add(o);
 
-		OfertaMarket o = new OfertaMarket(nextIdOferta++, t, vendedor, precio);
-		ofertas.add(o);
+        log(TipoLog.CREAR_OFERTA, vendedor.getLogin(), o.getIdOferta(),
+                "Publica tiquete " + idTiquete + " por $" + precio);
 
-		log(TipoLog.CREAR_OFERTA, vendedor.getLogin(), o.getIdOferta(),
-				"Publica tiquete " + idTiquete + " por $" + precio);
+        return o;
+    }
+    public boolean borrarOfertaPorVendedor(int idOferta, Cliente vendedor) {
+        OfertaMarket o = buscarOferta(idOferta);
 
-		return o;
-	}
+        if (o == null || !o.estaActiva() || !o.getVendedor().equals(vendedor))
+            return false;
 
-	public boolean borrarOfertaPorVendedor(int idOferta, Cliente vendedor) {
-		OfertaMarket o = buscarOferta(idOferta);
+        o.cancelarPorVendedor();
+        tiquetes.liberarTiquete(o.getTiquete().getIdTiquete());
 
-		if (o == null || !o.estaActiva() || !o.getVendedor().equals(vendedor))
-			return false;
+        log(TipoLog.BORRAR_OFERTA_VENDEDOR, vendedor.getLogin(), idOferta,
+                "Vendedor eliminó oferta");
 
-		o.cancelarPorVendedor();
-		tiquetes.liberarTiquete(o.getTiquete().getIdTiquete());
+        return true;
+    }
+    public boolean borrarOfertaPorAdmin(int idOferta, Administrador admin, String motivo) {
+        OfertaMarket o = buscarOferta(idOferta);
 
-		log(TipoLog.BORRAR_OFERTA_VENDEDOR, vendedor.getLogin(), idOferta, "Vendedor eliminó oferta");
+        if (o == null || !o.estaActiva()) return false;
 
-		return true;
-	}
+        o.cancelarPorAdmin();
+        tiquetes.liberarTiquete(o.getTiquete().getIdTiquete());
 
-	public boolean borrarOfertaPorAdmin(int idOferta, Administrador admin, String motivo) {
-		OfertaMarket o = buscarOferta(idOferta);
+        log(TipoLog.BORRAR_OFERTA_ADMIN, admin.getLogin(), idOferta,
+                "Admin borró oferta. Motivo: " + motivo);
 
-		if (o == null || !o.estaActiva())
-			return false;
+        return true;
+    }
+    public boolean comprarOferta(int idOferta, Cliente comprador) {
+        OfertaMarket o = buscarOferta(idOferta);
 
-		o.cancelarPorAdmin();
-		tiquetes.liberarTiquete(o.getTiquete().getIdTiquete());
+        if (o == null || !o.estaActiva()) return false;
+        if (o.getVendedor().equals(comprador)) return false;
 
-		log(TipoLog.BORRAR_OFERTA_ADMIN, admin.getLogin(), idOferta, "Admin borró oferta. Motivo: " + motivo);
+        double precio = o.getPrecio();
 
-		return true;
-	}
+        if (!usuarios.descontarSaldo(comprador.getLogin(), precio)) return false;
 
-	public boolean comprarOferta(int idOferta, Cliente comprador) {
-		OfertaMarket o = buscarOferta(idOferta);
+        usuarios.cargarSaldo(o.getVendedor().getLogin(), precio);
 
-		if (o == null || !o.estaActiva())
-			return false;
-		if (o.getVendedor().equals(comprador))
-			return false;
+        // Transferencia boleta
+        tiquetes.transferirTiquete(o.getVendedor(), comprador, o.getTiquete());
+        o.marcarVendida();
 
-		double precio = o.getPrecio();
+        log(TipoLog.COMPRAR_OFERTA, comprador.getLogin(), idOferta,
+                "Compra directa por $" + precio);
 
-		if (!usuarios.descontarSaldo(comprador.getLogin(), precio))
-			return false;
+        return true;
+    }
 
-		usuarios.cargarSaldo(o.getVendedor().getLogin(), precio);
+    public ContraOferta contraOfertar(int idOferta, Cliente comprador, double precio) {
+        OfertaMarket o = buscarOferta(idOferta);
 
-		tiquetes.transferirTiquete(o.getVendedor(), comprador, o.getTiquete());
-		o.marcarVendida();
+        if (o == null || !o.estaActiva()) throw new IllegalArgumentException("Oferta inactiva");
+        if (o.getVendedor().equals(comprador)) throw new IllegalArgumentException("No puedes ofertarte a ti mismo");
 
-		log(TipoLog.COMPRAR_OFERTA, comprador.getLogin(), idOferta, "Compra directa por $" + precio);
+        ContraOferta c = new ContraOferta(nextIdContra++, idOferta, comprador, precio);
+        o.agregarContraOferta(c);
+        contraofertas.add(c);
 
-		return true;
-	}
+        log(TipoLog.CONTRAOFERTA, comprador.getLogin(), idOferta,
+                "Propone $" + precio);
 
-	public ContraOferta contraOfertar(int idOferta, Cliente comprador, double precio) {
-		OfertaMarket o = buscarOferta(idOferta);
+        return c;
+    }
 
-		if (o == null || !o.estaActiva())
-			throw new IllegalArgumentException("Oferta inactiva");
-		if (o.getVendedor().equals(comprador))
-			throw new IllegalArgumentException("No puedes ofertarte a ti mismo");
+    public boolean aceptarContraOferta(int idOferta, int idContra, Cliente vendedor) {
+        OfertaMarket o = buscarOferta(idOferta);
 
-		ContraOferta c = new ContraOferta(nextIdContra++, idOferta, comprador, precio);
-		o.agregarContraOferta(c);
-		contraofertas.add(c);
+        if (o == null || !o.estaActiva() || !o.getVendedor().equals(vendedor)) return false;
 
-		log(TipoLog.CONTRAOFERTA, comprador.getLogin(), idOferta, "Propone $" + precio);
+        ContraOferta c = o.getContraofertas().stream()
+                .filter(x -> x.getIdContra() == idContra)
+                .findFirst().orElse(null);
 
-		return c;
-	}
+        if (c == null || c.getEstado() != EstadoContraOferta.PROPUESTA) return false;
 
-	public boolean aceptarContraOferta(int idOferta, int idContra, Cliente vendedor) {
-		OfertaMarket o = buscarOferta(idOferta);
+        double precio = c.getPrecioPropuesto();
 
-		if (o == null || !o.estaActiva() || !o.getVendedor().equals(vendedor))
-			return false;
+        if (!usuarios.descontarSaldo(c.getComprador().getLogin(), precio)) return false;
 
-		ContraOferta c = o.getContraofertas().stream().filter(x -> x.getIdContra() == idContra).findFirst()
-				.orElse(null);
+        usuarios.cargarSaldo(vendedor.getLogin(), precio);
 
-		if (c == null || c.getEstado() != EstadoContraOferta.PROPUESTA)
-			return false;
+        tiquetes.transferirTiquete(vendedor, c.getComprador(), o.getTiquete());
+        c.setEstado(EstadoContraOferta.ACEPTADA);
+        o.marcarVendida();
 
-		double precio = c.getPrecioPropuesto();
+        log(TipoLog.ACEPTAR_CONTRAOFERTA, vendedor.getLogin(), idOferta,
+                "Acepta $" + precio);
 
-		if (!usuarios.descontarSaldo(c.getComprador().getLogin(), precio))
-			return false;
+        return true;
+    }
 
-		usuarios.cargarSaldo(vendedor.getLogin(), precio);
+    public List<OfertaMarket> listarOfertas() {
+        List<OfertaMarket> activos = new ArrayList<>();
+        for (OfertaMarket o : ofertas)
+            if (o.estaActiva()) activos.add(o);
+        return activos;
+    }
 
-		tiquetes.transferirTiquete(vendedor, c.getComprador(), o.getTiquete());
-		c.setEstado(EstadoContraOferta.ACEPTADA);
-		o.marcarVendida();
+    public List<Log> consultarLog(Object usuario) {
+        if (!usuarios.esAdmin(usuario))
+            throw new IllegalArgumentException("Solo admin puede ver logs");
 
-		log(TipoLog.ACEPTAR_CONTRAOFERTA, vendedor.getLogin(), idOferta, "Acepta $" + precio);
-
-		return true;
-	}
-
-	public List<OfertaMarket> listarOfertas() {
-		List<OfertaMarket> activos = new ArrayList<>();
-		for (OfertaMarket o : ofertas)
-			if (o.estaActiva())
-				activos.add(o);
-		return activos;
-	}
-
-	public List<Log> consultarLog(Object usuario) {
-		if (!usuarios.esAdmin(usuario))
-			throw new IllegalArgumentException("Solo admin puede ver logs");
-
-		return logs;
-	}
+        return logs;
+    }
 
 }
+
