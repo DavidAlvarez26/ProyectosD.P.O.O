@@ -9,7 +9,7 @@ import persistencia.PersistenciaDatos;
 public class TestConsultaCatalogo {
     public static void main(String[] args) {
         PersistenciaDatos persistencia = new PersistenciaDatos();
-        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia, null);
         sistema.cargarDatos();
 
         System.out.println("Datos cargados correctamente desde los archivos.");

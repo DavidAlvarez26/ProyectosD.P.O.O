@@ -12,7 +12,7 @@ class PersistenciaTest {
     @Test
     public void testCargarDatos() {
         PersistenciaDatos persistencia = new PersistenciaDatos();
-        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia, null);
         sistema.cargarDatos();
         
         assertNotNull(sistema.getUsuarios(), "Usuarios no cargados");
@@ -32,11 +32,11 @@ class PersistenciaTest {
     @Test
     public void testGuardarYCargarDatos() {
         PersistenciaDatos persistencia = new PersistenciaDatos();
-        BoletaMaster sistemaOriginal = new BoletaMaster(null, null, null, null, null, persistencia);
+        BoletaMaster sistemaOriginal = new BoletaMaster(null, null, null, null, null, persistencia, null);
         
         sistemaOriginal.cargarDatos();
         sistemaOriginal.guardarDatos();
-        BoletaMaster sistemaCopia = new BoletaMaster(null, null, null, null, null, persistencia);
+        BoletaMaster sistemaCopia = new BoletaMaster(null, null, null, null, null, persistencia, null);
         sistemaCopia.cargarDatos();
         assertEquals(sistemaOriginal.getUsuarios().size(), sistemaCopia.getUsuarios().size());
         assertEquals(sistemaOriginal.getEventos().size(), sistemaCopia.getEventos().size());

@@ -11,7 +11,7 @@ import persistencia.PersistenciaDatos;
 public class TestTransferenciaTiquetes {
     public static void main(String[] args) {
         PersistenciaDatos persistencia = new PersistenciaDatos();
-        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia, null);
         sistema.cargarDatos();
 
         Cliente origen = (Cliente) sistema.buscarUsuario("cliente01"); 

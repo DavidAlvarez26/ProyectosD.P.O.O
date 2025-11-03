@@ -1,9 +1,13 @@
 package logica;
 
+import Usuarios.Cliente;
+
 public interface IPuertoTiquetes {
-	public Tiquete buscarTiquete(String idTiquete);
-	public void reservarTiquete(String idTiquete);
-	public void liberarTiquete(String idTiquete);
-	public void marcarTiqueteVendido(String idTiquete);
+	public Tiquete buscarTiquete(int idTiquete);
+	public void reservarTiquete(int idTiquete);
+	public void liberarTiquete(int idTiquete);
+	public void marcarTiqueteVendido(int idTiquete);
+	public void transferirTiquete(Cliente vendedor, Cliente comprador, Tiquete tiquete);
+
 	
 }

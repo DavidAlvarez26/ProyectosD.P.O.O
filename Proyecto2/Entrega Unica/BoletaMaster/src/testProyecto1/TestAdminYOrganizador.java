@@ -15,7 +15,7 @@ public class TestAdminYOrganizador {
         PersistenciaDatos persistencia = new PersistenciaDatos();
         BoletaMaster sistema = new BoletaMaster(
             new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-            new ArrayList<>(), null, persistencia
+            new ArrayList<>(), null, persistencia, null
         );
         sistema.cargarDatos();
 

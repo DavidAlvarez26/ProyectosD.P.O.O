@@ -20,7 +20,7 @@ import persistencia.PersistenciaDatos;
 class EventoTest {
 
 	 private BoletaMaster nuevoSistemaVacio() {
-	        return new BoletaMaster(null, null, null, null, null, new PersistenciaDatos());
+	        return new BoletaMaster(null, null, null, null, null, new PersistenciaDatos(), null);
 	    }
 
 	    private Evento crearEventoBasico(Organizador org, Venue venue) {

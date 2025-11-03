@@ -22,7 +22,7 @@ public class Organizador extends Usuario{
 	}
 
 	@Override
-	protected boolean autenticar(String contrasena) {
+	public boolean autenticar(String contrasena) {
 		return this.getContrasena().equals(contrasena);
 	}
 

@@ -11,7 +11,10 @@ import Finanzas.ReporteFinanciero;
 import Usuarios.Administrador;
 import Usuarios.Cliente;
 import Usuarios.Organizador;
+import market.ContraOferta;
+import market.Log;
 import market.Marketplace;
+import market.OfertaMarket;
 import persistencia.PersistenciaDatos;
 import Finanzas.Rembolso;
 
@@ -21,13 +24,12 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	private List<Venue> venues;
 	private List<Compra> compras;
 	private List<Tiquete> tiquetes;
-	@SuppressWarnings("unused")
 	private Administrador administrador;
 	private PersistenciaDatos persistencia;
 	private Marketplace marketplace;
 	
 	public BoletaMaster(List<Usuario> usuarios, List<Evento> eventos, List<Venue> venues, List<Compra> compra,
-			Administrador administrador, PersistenciaDatos persistencia) {
+			Administrador administrador, PersistenciaDatos persistencia, Marketplace marketplace) {
 	    this.usuarios = new ArrayList<>();
 	    this.eventos = new ArrayList<>();
 	    this.venues = new ArrayList<>();
@@ -35,6 +37,7 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 	    this.tiquetes = new ArrayList<>();
 	    this.administrador = null;
 	    this.persistencia = persistencia;
+	    this.marketplace = new Marketplace(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), this, this);
 	}
 	
 	public PersistenciaDatos getPersistencia() {
@@ -361,40 +364,96 @@ public class BoletaMaster implements IPuertoTiquetes, IPuertoUsuarios  {
 
 	    return reporte;
 	}
+	public Venue buscarVenue(String idVenue) {
+	    for (Venue v : venues) {
+	        if (v.getIdvenue().equals(idVenue)) {
+	            return v;
+	        }
+	    }
+	    return null;
+	}
 
 	@Override
 	public void cargarSaldo(String login, double valor) {
-		// TODO Auto-generated method stub
-		
+	    Usuario u = buscarUsuario(login);
+	    if (u instanceof Cliente c) {
+	        c.setSaldo(c.getSaldo() + valor);
+	    }
 	}
 
 	@Override
 	public boolean descontarSaldo(String login, double valor) {
-		// TODO Auto-generated method stub
-		return false;
+	    Usuario u = buscarUsuario(login);
+	    if (u instanceof Cliente c) {
+	        if (c.getSaldo() >= valor) {
+	            c.setSaldo(c.getSaldo() - valor);
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 
 	@Override
-	public Tiquete buscarTiquete(String idTiquete) {
-		// TODO Auto-generated method stub
-		return null;
+	public Tiquete buscarTiquete(int idTiquete) {
+	    for (Usuario u : usuarios) {
+	        if (u instanceof Cliente c) {
+	            for (Tiquete t : c.getTiquetes()) {
+	                if (t.getIdTiquete()==idTiquete) {
+	                    return t;
+	                }
+	            }
+	        }
+	    }
+	    return null;
 	}
 
 	@Override
-	public void reservarTiquete(String idTiquete) {
-		// TODO Auto-generated method stub
-		
+	public void reservarTiquete(int idTiquete) {
+	    Tiquete t = buscarTiquete(idTiquete);
+	    if (t != null) {
+	        t.setEstado("Reservado");
+	    }
 	}
 
 	@Override
-	public void liberarTiquete(String idTiquete) {
-		// TODO Auto-generated method stub
-		
+	public void liberarTiquete(int idTiquete) {
+	    Tiquete t = buscarTiquete(idTiquete);
+	    if (t != null) {
+	        t.setEstado("Disponible");
+	    }
 	}
 
 	@Override
-	public void marcarTiqueteVendido(String idTiquete) {
-		// TODO Auto-generated method stub
-		
+	public void marcarTiqueteVendido(int idTiquete) {
+	    Tiquete t = buscarTiquete(idTiquete);
+	    if (t != null) {
+	        t.setEstado("Vendido");
+	    }
+	}
+
+	@Override
+	public boolean esAdmin(Object usuario) {
+		return usuario instanceof Administrador;
+	}
+	public OfertaMarket crearOfertaReventa(Cliente vendedor, int idTiquete, double precio) {
+	    return marketplace.crearOferta(vendedor, idTiquete, precio);
+	}
+	public boolean borrarOfertaReventa(Cliente vendedor, int idOferta) {
+	    return marketplace.borrarOfertaPorVendedor(idOferta, vendedor);
+	}
+	public boolean borrarOfertaReventaAdmin(Administrador admin, int idOferta, String motivo) {
+	    return marketplace.borrarOfertaPorAdmin(idOferta, admin, motivo);
+	}
+	public List<OfertaMarket> listarOfertasReventa() {
+	    return marketplace.listarOfertas();
+	}
+	public ContraOferta crearContraOferta(Cliente comprador, int idOferta, double precio) {
+	    return marketplace.contraOfertar(idOferta, comprador, precio);
+	}
+	public boolean aceptarContraOferta(Cliente vendedor, int idOferta, int idContra) {
+	    return marketplace.aceptarContraOferta(idOferta, idContra, vendedor);
+	}
+	public List<Log> consultarLogsMarketplace(Administrador admin) {
+	    return marketplace.consultarLog(admin);
 	}
 }

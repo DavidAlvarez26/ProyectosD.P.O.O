@@ -28,7 +28,7 @@ class ReporteFinancieroTest {
 	@Test
     @DisplayName("Reporte: totales, por evento y por organizador")
     void reporteBasico() {
-        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, new PersistenciaDatos());
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, new PersistenciaDatos(), null);
 
         Organizador org = new Organizador("org1","x","María","m@x.com",0,null);
         Cliente c = new Cliente("cli1","x","Juan","j@x.com",100000, new ArrayList<>());

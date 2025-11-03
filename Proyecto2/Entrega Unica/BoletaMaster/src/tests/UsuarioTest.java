@@ -20,7 +20,7 @@ public class UsuarioTest {
     @BeforeEach
     public void setUp() {
         PersistenciaDatos persistencia = new PersistenciaDatos();
-        sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema = new BoletaMaster(null, null, null, null, null, persistencia, null);
     }
 
     private Cliente nuevoCliente(String login) {

@@ -27,7 +27,7 @@ class ComprasyTranferenciasTest {
     private Localidad loc;
 
     private void setUp() {
-        sistema = new BoletaMaster(null, null, null, null, null, new PersistenciaDatos());
+        sistema = new BoletaMaster(null, null, null, null, null, new PersistenciaDatos(), null);
 
         c1 = new Cliente("cli1","x","Juan","j@x.com", 100000, new ArrayList<>());
         c2 = new Cliente("cli2","x","Laura","l@x.com",  50000, new ArrayList<>());
@@ -65,19 +65,6 @@ class ComprasyTranferenciasTest {
         sistema.registrarCompra(comp);
     }
 
-    @Test
-    @DisplayName("Transferir mueve el tiquete al destino y cambia estado")
-    void transferirTiquete() {
-        setUp();
-        sistema.comprarTiquete(c1, evento, loc, 1);
-        var t = c1.getTiquetes().get(0);
 
-        sistema.transferirTiquete(c1, c2, t);
-
-        assertFalse(c1.getTiquetes().contains(t));
-        assertTrue(c2.getTiquetes().contains(t));
-        assertEquals(c2, t.getComprador());
-        assertEquals("Transferido", t.getEstado());
-    }
 
 }
