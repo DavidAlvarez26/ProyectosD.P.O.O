@@ -62,7 +62,7 @@ public class ConsolaCliente {
                 return Integer.parseInt(entrada);
             } 
             catch (NumberFormatException e) {
-                System.out.println("❌ Entrada inválida. Ingresa un número válido.");
+                System.out.println("Entrada inválida. Ingresa un número válido.");
             }
         }
     }
