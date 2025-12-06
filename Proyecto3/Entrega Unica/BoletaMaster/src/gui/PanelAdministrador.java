@@ -111,7 +111,7 @@ public class PanelAdministrador extends JPanel {
     private void accionVerLogs(ActionEvent e) {
         txtSalida.setText("");
         try {
-            List<Log> logs = sistema.consultarLogsMarketplace(admin); // fachada BoletaMaster -> Marketplace
+            List<Log> logs = sistema.consultarLogsMarketplace(admin);
 
             if (logs == null || logs.isEmpty()) {
                 txtSalida.append("No hay registros en el log.\n");
