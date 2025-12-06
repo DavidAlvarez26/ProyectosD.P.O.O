@@ -1,0 +1,57 @@
+Buscar la clase:
+presentacion.consolaPrincipal
+
+Ejecutar el método main de esa clase.
+Al correr, se abre la ventana de login de BoletaMaster con datos de prueba cargados en memoria (no necesitan los archivos .txt para probar).
+
+En la ventana de login, llenar SIEMPRE estas tres casillas:
+
+Usuario
+
+Contraseña
+
+Rol (seleccionar en el desplegable)
+
+CASOS DE PRUEBA:
+
+A) Cliente 1 (tiene varios tiquetes y ofertas en el marketplace)
+Usuario: cliente01
+Contraseña: pass
+Rol: Cliente
+funciones:
+
+Ver y consultar sus tiquetes.
+
+Probar impresión de tiquetes.
+
+Entrar al Marketplace y ver ofertas disponibles.
+
+B) Cliente 2 (otro cliente con tiquetes y marketplace)
+Usuario: cliente02
+Contraseña: 123
+Rol: Cliente
+funciones:
+
+Ver sus tiquetes.
+
+Ver que también tiene ofertas en el Marketplace.
+
+C) Organizador (ve los eventos que organiza)
+Usuario: organizador01
+Contraseña: abcd
+Rol: Organizador
+funciones:
+
+Ver lista de eventos organizados (ej. Coldplay, Hamlet, Festival de Cine).
+
+Probar las acciones disponibles en el panel de organizador.
+
+D) Administrador (gestiona logs y marketplace)
+Usuario: admin01
+Contraseña: 1234
+Rol: Administrador
+funciones:
+
+Ver logs del Marketplace (creación y eliminación de ofertas).
+
+Probar gestión de ofertas de reventa desde el panel de administrador.

@@ -1,0 +1,32 @@
+package logica;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Organizador extends Usuario{
+	public List<Evento> eventosOrganizados;
+
+	public Organizador(String login, String contrasena, String nombre, String correo, double saldo,List<Evento> eventosOrganizados) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.eventosOrganizados=new ArrayList<>();
+	}
+
+	@Override
+	protected boolean autenticar(String contrasena) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double consultarSaldo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

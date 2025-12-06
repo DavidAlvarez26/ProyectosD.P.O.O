@@ -1,0 +1,28 @@
+package Finanzas;
+
+import java.sql.Date;
+
+import logica.Tiquete;
+import logica.Usuario;
+
+public class Rembolso {
+	private String idReembolso;
+	private Usuario usuario;
+	private Tiquete tiquete;
+	private double valor;
+	private Date fecha;
+	private String motivo;
+	
+	public Rembolso(String idReembolso, Usuario usuario, Tiquete tiquete, double valor, Date fecha, String motivo) {
+		
+		this.idReembolso = idReembolso;
+		this.usuario = usuario;
+		this.tiquete = tiquete;
+		this.valor = valor;
+		this.fecha = fecha;
+		this.motivo = motivo;
+	}
+	public calcualrValorReembolso
+	
+	
+}

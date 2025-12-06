@@ -1,0 +1,23 @@
+package tests;
+import Usuarios.Cliente;
+import logica.BoletaMaster;
+import persistencia.PersistenciaDatos;
+
+public class TestConsultaSaldo {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        Cliente cliente = (Cliente) sistema.buscarUsuario("cliente01");
+
+        System.out.println("\n===== CONSULTA DE SALDO =====");
+        System.out.println("Saldo inicial: $" + cliente.getSaldo());
+
+        cliente.recargarSaldo(50000);
+        System.out.println("Saldo después de recargar"+50000+": $" + cliente.getSaldo());
+
+        cliente.recargarSaldo(-20000);
+        System.out.println("Saldo después de compra simulada de 20000: $" + cliente.getSaldo());
+    }
+}

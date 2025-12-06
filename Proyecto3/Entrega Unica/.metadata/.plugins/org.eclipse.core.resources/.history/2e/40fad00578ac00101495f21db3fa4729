@@ -1,0 +1,21 @@
+package persistencia;
+
+import java.util.List;
+
+import Finanzas.Compra;
+
+public class PersistenciaCompras implements IPersistenciaCompras {
+
+	@Override
+	public List<Compra> cargarCompras(String archivo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void guardarCompras(String archivo, List<Compra> compras) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

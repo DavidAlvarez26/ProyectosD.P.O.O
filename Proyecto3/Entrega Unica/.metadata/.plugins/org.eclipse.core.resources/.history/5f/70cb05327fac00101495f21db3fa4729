@@ -1,0 +1,21 @@
+package persistencia;
+
+import java.util.List;
+
+import logica.Tiquete;
+
+public class PersistenciaTiquetes implements IPersistenciaTiquetes {
+
+	@Override
+	public List<Tiquete> cargarTiquetes(String archivo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void guardarTiquetes(String archivo, List<Tiquete> Tiquetes) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

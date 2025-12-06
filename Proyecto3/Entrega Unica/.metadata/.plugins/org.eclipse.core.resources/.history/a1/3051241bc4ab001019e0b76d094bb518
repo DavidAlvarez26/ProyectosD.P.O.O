@@ -1,0 +1,47 @@
+package Tiquetes;
+
+import Usuarios.Cliente;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+
+public class TiqueteBasico extends Tiquete {
+	
+	public String numeroAsiento;
+	
+	public TiqueteBasico( double cargoServicio, double cuotaAdicional, int idTiquete, Evento evento, Cliente comprador, Localidad localidad, String estado,
+			boolean transferible, String numeroAsiento) {
+		super(cargoServicio, cuotaAdicional, idTiquete,evento, comprador, localidad, estado,
+				transferible);
+		this.numeroAsiento=numeroAsiento;
+
+	}
+
+	@Override
+	public double calcularPrecioTotal() {
+        double precioServicio = localidad.precioBase * cargoServicio;     // es un porcentaje cargo servicio
+        double total = localidad.getPrecioBase() + precioServicio + cuotaAdicional;
+        return total;
+	}
+
+	@Override
+	public boolean esTransferible() {
+		return  transferible && !estado.equalsIgnoreCase("Vencido");
+	}
+
+	@Override
+	public void marcarComoTranferido() {
+		this.estado="Transferido";
+
+	}
+
+	public String getNumeroAsiento() {
+		return numeroAsiento;
+	}
+
+	public void setNumeroAsiento(String numeroAsiento) {
+		this.numeroAsiento = numeroAsiento;
+	}
+	
+
+}

@@ -1,0 +1,63 @@
+package persistencia;
+
+import java.util.List;
+
+import logica.Evento;
+import java.io.*;
+import java.util.*;
+import logica.Venue;
+import Usuarios.Organizador;
+import logica.Localidad;
+import java.sql.Date;
+import java.sql.Time;
+public class PersistenciaEventos implements IPersistenciaEventos{
+
+    @Override
+    public List<Evento> cargarEventos(String archivo) {
+        List<Evento> eventos = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(";");
+                if (partes.length >= 9) {
+                    String id = partes[0];
+                    String nombre = partes[1];
+                    Date fecha = Date.valueOf(partes[2]);
+                    Time hora = Time.valueOf(partes[3]);
+                    String tipo = partes[4];
+                    String nombreVenue = partes[5];
+                    String nombreOrganizador = partes[6];
+                    String localidades = partes[7];
+                    String estado = partes[8];
+
+                    // Simplificación: creamos objetos vacíos donde no se cargan relaciones complejas
+                    Venue venue = new Venue(nombreVenue, 0, "V0", nombreVenue, true);
+                    Organizador organizador = new Organizador(nombreOrganizador, "", nombreOrganizador, "", 0, new ArrayList<>());
+                    List<Localidad> listaLoc = new ArrayList<>();
+
+                    Evento evento = new Evento(id, nombre, fecha, hora, tipo, venue, organizador, listaLoc, estado);
+                    eventos.add(evento);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("⚠️ Error al cargar eventos: " + e.getMessage());
+        }
+        return eventos;
+    }
+
+    @Override
+    public void guardarEventos(String archivo, List<Evento> eventos) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
+            for (Evento e : eventos) {
+                pw.println(e.getIdEvento() + ";" + e.getNombre() + ";" +
+                           e.getFecha() + ";" + e.getHora() + ";" + e.getTipo() + ";" +
+                           e.getVenue().getNombre() + ";" +
+                           e.getOrganizador().getNombre() + ";" +
+                           e.getLocalidades().size() + ";" + e.getEstado());
+            }
+        } catch (IOException e) {
+            System.err.println("⚠️ Error al guardar eventos: " + e.getMessage());
+        }
+    }
+
+}

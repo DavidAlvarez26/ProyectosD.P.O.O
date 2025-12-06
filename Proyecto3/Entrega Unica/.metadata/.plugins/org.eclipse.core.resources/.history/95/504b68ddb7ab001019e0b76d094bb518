@@ -1,0 +1,50 @@
+package Tiquetes;
+
+import java.sql.Date;
+
+import Usuarios.Cliente;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+
+public class tiqueteBasico extends Tiquete {
+	
+	public String numeroAsiento;
+	
+	public tiqueteBasico(double precioBase, double cargoServicio, double cuotaAdicional, int idTiquete,
+			Date fechaEvento, Evento evento, Cliente comprador, Localidad localidad, String estado,
+			boolean tranferible, String numeroAsiento) {
+		super(precioBase, cargoServicio, cuotaAdicional, idTiquete, fechaEvento, evento, comprador, localidad, estado,
+				tranferible);
+		this.numeroAsiento=numeroAsiento;
+
+	}
+
+	@Override
+	public double calcularPrecioTotal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean esTransferible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void marcarComoTranferido() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public String getNumeroAsiento() {
+		return numeroAsiento;
+	}
+
+	public void setNumeroAsiento(String numeroAsiento) {
+		this.numeroAsiento = numeroAsiento;
+	}
+	
+
+}

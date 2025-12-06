@@ -1,0 +1,57 @@
+package Tiquetes;
+
+import java.util.List;
+
+import Usuarios.Cliente;
+import logica.Evento;
+import logica.Localidad;
+import logica.Tiquete;
+
+public class TiqueteDeluxe extends Tiquete{
+	private List<Tiquete> cortesia;
+	private List<Beneficio> beneficios;
+    private double precioDeluxe;
+	
+	public TiqueteDeluxe(double cargoServicio, double cuotaAdicional, int idTiquete, Evento evento, Cliente comprador,
+			Localidad localidad, String estado, boolean tranferible, List<Tiquete> cortesia, List<Beneficio> beneficios, double precioDeluxe) {
+		super(cargoServicio, cuotaAdicional, idTiquete, evento, comprador, localidad, estado, tranferible);
+		this.cortesia=cortesia;
+		this.beneficios=beneficios;
+		this.precioDeluxe=precioDeluxe;
+	}
+	@Override
+	public double calcularPrecioTotal() {
+		return precioDeluxe;
+	}
+	@Override
+	public boolean esTransferible() {
+		
+		return false;
+	}
+	@Override
+	public void marcarComoTranferido() {
+		this.estado = "NO TRANSFERIBLE";
+		
+	}
+	
+	public void agregarBeneficio(Beneficio beneficio) {
+		if (beneficio != null && !beneficios.contains(beneficio)) {
+            beneficios.add(beneficio);
+        }
+	}
+	public void agregarCortesia(Tiquete tiquete) {
+		if (tiquete != null && !cortesia.contains(tiquete)) {
+            cortesia.add(tiquete);
+        }
+	}
+    public List<Beneficio> listarBeneficios() {
+        return beneficios;
+    }
+    public List<Tiquete> getCortesias() {
+        return cortesia;
+    }
+
+    public double getPrecioDeluxe() {
+        return precioDeluxe;
+    }
+}

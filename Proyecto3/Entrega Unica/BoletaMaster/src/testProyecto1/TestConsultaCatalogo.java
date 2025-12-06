@@ -1,0 +1,27 @@
+package testProyecto1;
+
+import java.util.List;
+
+import logica.BoletaMaster;
+import logica.Evento;
+import persistencia.PersistenciaDatos;
+
+public class TestConsultaCatalogo {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia, null);
+        sistema.cargarDatos();
+
+        System.out.println("Datos cargados correctamente desde los archivos.");
+
+        List<Evento> catalogo = sistema.consultarCatalogoEventos(null, null, null);
+        System.out.println("Catálogo de eventos:");
+
+        for (Evento e : catalogo) {
+            System.out.println(" - " + e.getNombre() + " | Tipo: " + e.getTipo() +
+                               " | Fecha: " + e.getFecha() +
+                               " | Lugar: " + e.getVenue().getNombre() +
+                               " | Estado: " + e.getEstado());
+        }
+    }
+}

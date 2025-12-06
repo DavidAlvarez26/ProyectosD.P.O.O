@@ -1,0 +1,34 @@
+package tests;
+
+import Usuarios.Cliente;
+import logica.BoletaMaster;
+import logica.Tiquete;
+import persistencia.PersistenciaDatos;
+
+public class TestTransferenciaTiquetes {
+    public static void main(String[] args) {
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        Cliente origen = (Cliente) sistema.buscarUsuario("cliente01");
+        Cliente destino = (Cliente) sistema.buscarUsuario("cliente02");
+
+        // Supongamos que el cliente ya tiene un tiquete (usando el test anterior)
+        if (origen.getTiquetes().isEmpty()) {
+            System.out.println("El cliente no tiene tiquetes para transferir.");
+            return;
+        }
+
+        Tiquete tiquete = origen.getTiquetes().get(0);
+        System.out.println("\n===== TRANSFERENCIA DE TIQUETE =====");
+        System.out.println("Origen: " + origen.getNombre());
+        System.out.println("Destino: " + destino.getNombre());
+        System.out.println("Tiquete ID: " + tiquete.getIdTiquete() + " | Estado: " + tiquete.getEstado());
+
+        sistema.transferirTiquete(origen, destino, tiquete);
+
+        System.out.println("\n===== RESULTADO =====");
+        System.out.println("Tiquete transferido a: " + tiquete.getComprador().getNombre());
+        System.out.println("Nuevo estado del tiquete: " + tiquete.getEstado());
+    }

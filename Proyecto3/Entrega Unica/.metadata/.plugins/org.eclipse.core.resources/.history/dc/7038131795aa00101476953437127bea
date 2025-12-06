@@ -1,0 +1,32 @@
+package logica;
+
+import java.util.List;
+
+public class Cliente extends Usuario{
+	public List<Tiquete> tiquetes;
+	
+	public Cliente(String login, String contrasena, String nombre, String correo, double saldo,List<Tiquete> tiquetes) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.tiquetes=tiquetes;
+	}
+
+	@Override
+	protected boolean autenticar(String contrasena) {
+		//TODO
+		return false;
+	}
+
+	@Override
+	public double consultarSaldo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+}

@@ -1,0 +1,28 @@
+package logica;
+
+public abstract class Usuario {
+	protected String login;
+	protected String contrasena;
+	protected String nombre;
+	protected String correo;
+	protected double saldo;
+	
+	public Usuario(String login, String contrasena, String nombre, String correo, double saldo) {
+	
+		this.login = login;
+		this.contrasena = contrasena;
+		this.nombre = nombre;
+		this.correo = correo;
+		this.saldo = saldo;
+	}
+	protected abstract boolean autenticar(String contrasena);
+	public abstract double consultarSaldo();
+	public abstract void  recargarSaldo(double monto);
+	
+	
+	
+	
+	
+	
+	
+}

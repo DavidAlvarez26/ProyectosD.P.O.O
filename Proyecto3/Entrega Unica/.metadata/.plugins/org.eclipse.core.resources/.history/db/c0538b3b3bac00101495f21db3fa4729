@@ -1,0 +1,37 @@
+package logica;
+
+import java.sql.Date;
+
+import Usuarios.Cliente;
+
+public abstract class Tiquete {
+	protected double precioBase;
+	protected double cargoServicio;
+	protected double cuotaAdicional;
+	protected int idTiquete;
+	protected Date fechaEvento;
+	protected Evento evento;
+	protected Cliente comprador;
+	protected Localidad localidad;
+	protected String estado;
+	protected boolean transferible;
+	
+	public Tiquete(double cargoServicio, double cuotaAdicional, int idTiquete,
+			Evento evento, Cliente comprador, Localidad localidad, String estado, boolean tranferible) {
+		this.precioBase = localidad.getPrecioBase();
+		this.cargoServicio = cargoServicio;
+		this.cuotaAdicional = cuotaAdicional;
+		this.idTiquete = idTiquete;
+		this.fechaEvento = evento.getFecha();
+		this.evento = evento;
+		this.comprador = comprador;
+		this.localidad = localidad;
+		this.estado = estado;
+		this.transferible = tranferible;
+	}
+	public abstract double calcularPrecioTotal();
+	public abstract boolean esTransferible();
+	public abstract void marcarComoTranferido();
+	
+	
+}

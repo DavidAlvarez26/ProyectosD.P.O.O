@@ -1,0 +1,5 @@
+V001;Movistar Arena;Bogotá;12000;true
+V002;Teatro Colón;Bogotá;1500;true
+V003;Parque 93;Bogotá;8000;false
+V004;Estadio El Campín;Bogotá;40000;true
+V005;Plaza Mayor;Medellín;10000;false

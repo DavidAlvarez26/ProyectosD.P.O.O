@@ -1,0 +1,32 @@
+package logica;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Cliente extends Usuario{
+	public List<Tiquete> tiquetes;
+	
+	public Cliente(String login, String contrasena, String nombre, String correo, double saldo,List<Tiquete> tiquetes) {
+		super(login, contrasena, nombre, correo, saldo);
+		this.tiquetes=new ArrayList<>();
+	}
+
+	@Override
+	protected boolean autenticar(String contrasena) {
+		//TODO
+		return ;
+	}
+
+	@Override
+	public double consultarSaldo() {
+		return getSaldo();
+	}
+
+	@Override
+	public void recargarSaldo(double monto) {
+		this.saldo+=monto;
+		
+	}
+	
+
+}

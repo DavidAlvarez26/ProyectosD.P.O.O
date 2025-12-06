@@ -1,0 +1,134 @@
+package logica;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import Finanzas.Compra;
+import Finanzas.Oferta;
+import Finanzas.ReporteFinanciero;
+import Usuarios.Administrador;
+import Usuarios.Cliente;
+import persistencia.PersistenciaDatos;
+
+public class BoletaMaster {
+	private List<Usuario> usuarios;
+	private List<Evento> eventos;
+	private List<Venue> venues;
+	private List<Compra> compras;
+	private List<Tiquete> tiquetes;
+	private Administrador administrador;
+	private PersistenciaDatos persistencia;
+	
+	public BoletaMaster(List<Usuario> usuarios, List<Evento> eventos, List<Venue> venues, List<Compra> compra,
+			Administrador administrador, PersistenciaDatos persistencia) {
+        this.usuarios = new ArrayList<>();
+        this.eventos = new ArrayList<>();
+        this.venues = new ArrayList<>();
+        this.compras = new ArrayList<>();
+        this.administrador = administrador;
+		this.persistencia = persistencia;
+	}
+
+    public void cargarDatos() {
+        this.usuarios = persistencia.getPersistenciaUsuarios().cargarUsuarios("data/usuarios.txt");
+        this.eventos = persistencia.getPersistenciaEventos().cargarEventos("data/eventos.txt");
+        this.compras = persistencia.getPersistenciaCompras().cargarCompras("data/compras.txt");
+        this.venues = persistencia.getPersistenciaVenues().cargarVenues("data/venues.txt");
+        this.tiquetes = persistencia.getPersistenciaTiquetes().cargarTiquetes("data/tiquetes.txt");
+
+        System.out.println("Datos cargados correctamente desde los archivos.");
+    }
+    public void guardarDatos() {
+        persistencia.getPersistenciaUsuarios().guardarUsuarios("data/usuarios1.txt", usuarios);
+        persistencia.getPersistenciaEventos().guardarEventos("data/eventos1.txt", eventos);
+        persistencia.getPersistenciaCompras().guardarCompras("data/compras1.txt", compras);
+        persistencia.getPersistenciaVenues().guardarVenues("data/venues1.txt", venues);
+        persistencia.getPersistenciaTiquetes().guardarTiquetes("data/tiquetes1.txt", tiquetes);
+
+        System.out.println("💾 Datos guardados correctamente en los archivos.");
+    }
+
+	public void registrarUsuario(Usuario usuario) {
+        if (buscarUsuario(usuario.getLogin()) == null) {
+            usuarios.add(usuario);
+            System.out.println("Usuario registrado: " + usuario.getNombre());
+        } else {
+            System.out.println("Ya existe un usuario con ese login.");
+        }
+	}
+
+	public Usuario buscarUsuario(String login) {
+        for (Usuario u : usuarios) {
+            if (u.getLogin().equalsIgnoreCase(login)) {
+                return u;
+            }
+        }
+        return null;
+	}
+
+	public void eliminarUsuario(String login) {
+        Usuario u = buscarUsuario(login);
+        if (u != null) {
+            usuarios.remove(u);
+            System.out.println("Usuario eliminado: " + login);
+        } else {
+            System.out.println("No se encontró el usuario con login: " + login);
+        }
+	}
+
+	public void agregarEvento(Evento evento) {
+        if (buscarEvento(evento.getIdEvento()) == null) {
+            eventos.add(evento);
+            System.out.println("Evento agregado: " + evento.getNombre());
+        } else {
+            System.out.println("Ya existe un evento con ese ID.");
+        }
+	}
+
+	public Evento buscarEvento(String idEvento) {
+        for (Evento e : eventos) {
+            if (e.getIdEvento().equalsIgnoreCase(idEvento)) {
+                return e;
+            }
+        }
+        return null;
+	}
+
+	public List<Evento> consultarCatalogoEventos(String tipo, Date fecha, String ubicacion) {
+	    //TODO
+	    return new 
+	}
+
+	public void comprarTiquete(Cliente cliente, Evento evento, Localidad localidad, int cantidad) {
+	    //TODO
+	}
+
+	public void transferirTiquete(Cliente origen, Cliente destino, Tiquete tiquete) {
+	    //TODO
+	}
+
+	public void registrarCompra(Compra compra) {
+	    //TODO
+	}
+
+	public void cancelarEvento(Administrador admin, Evento evento, String motivo) {
+	    //TODO
+	}
+
+	public void procesarReembolso(Tiquete tiquete, Usuario usuario, String motivo) {
+	    //TODO
+	}
+
+	public ReporteFinanciero generarReporteFinanciero(Administrador admin) {
+	    //TODO: 
+	    return 
+	}
+
+	public void aplicarOferta(Evento evento, Localidad localidad, Oferta oferta) {
+	    //TODO
+	}
+	
+	
+	
+}

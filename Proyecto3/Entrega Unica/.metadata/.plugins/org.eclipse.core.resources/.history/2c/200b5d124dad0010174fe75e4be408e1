@@ -1,0 +1,88 @@
+package presentacion;
+
+
+
+import logica.*;
+import persistencia.PersistenciaDatos;
+import Usuarios.Cliente;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        PersistenciaDatos persistencia = new PersistenciaDatos();
+        BoletaMaster sistema = new BoletaMaster(null, null, null, null, null, persistencia);
+        sistema.cargarDatos();
+
+        // 🔧 Inicialización de prueba (para que funcione comprar y consultar)
+        Evento evento = sistema.buscarEvento("E001");
+        if (evento.getLocalidades().isEmpty()) {
+            Localidad vip = new Localidad("VIP", 20000, new ArrayList<>());
+            Localidad general = new Localidad("General", 10000, new ArrayList<>());
+
+            // Agregar algunos tiquetes a cada localidad
+            for (int i = 1; i <= 5; i++) {
+                Tiquete t = new TiqueteBasico(10000, 2000, i, evento, null, vip, "Disponible", true, "A" + i);
+                vip.getTiquetes().add(t);
+            }
+
+            for (int i = 6; i <= 10; i++) {
+                Tiquete t = new TiqueteBasico(8000, 1500, i, evento, null, general, "Disponible", true, "B" + i);
+                general.getTiquetes().add(t);
+            }
+
+            evento.getLocalidades().add(vip);
+            evento.getLocalidades().add(general);
+        }
+
+        // Menú principal
+        System.out.println("=== BoletaMaster ===");
+        System.out.println("1. Consultar catálogo");
+        System.out.println("2. Comprar tiquete");
+        System.out.println("3. Consultar tiquetes activos");
+        System.out.println("4. Salir");
+
+        int opcion = sc.nextInt();
+        sc.nextLine(); // limpiar buffer
+
+        switch (opcion) {
+            case 1 -> {
+                System.out.println("\n=== Catálogo de eventos ===");
+                sistema.consultarCatalogoEventos(null, null, null)
+                    .forEach(e -> System.out.println(" - " + e.getNombre()));
+            }
+
+            case 2 -> {
+                Cliente c = (Cliente) sistema.buscarUsuario("cliente01");
+                System.out.println("\nSimulando compra para " + c.getNombre());
+                sistema.comprarTiquete(c, evento, evento.getLocalidades().get(0), 2);
+                System.out.println("Saldo final: $" + c.getSaldo());
+            }
+
+            case 3 -> {
+                Cliente c = (Cliente) sistema.buscarUsuario("cliente01");
+                System.out.println("\n=== Tiquetes activos ===");
+                if (c.getTiquetes().isEmpty()) {
+                    System.out.println("El cliente no tiene tiquetes comprados.");
+                } else {
+                    c.consultarTiquetesActivos()
+                     .forEach(t -> System.out.println(" - " + t.getEvento().getNombre() + " (" + t.getEstado() + ")"));
+                }
+            }
+
+            default -> System.out.println("Adiós 👋");
+        }
+
+        // 💾 Guardar cambios
+        System.out.println("\n¿Deseas guardar los cambios en los archivos? (si/no)");
+        String respuesta = sc.next();
+        if (respuesta.equalsIgnoreCase("si")) {
+            sistema.guardarDatos();
+            System.out.println("✅ Datos guardados correctamente.");
+        } else {
+            System.out.println("❌ Cambios descartados.");
+        }
+
+        sc.close();
+    }
+}

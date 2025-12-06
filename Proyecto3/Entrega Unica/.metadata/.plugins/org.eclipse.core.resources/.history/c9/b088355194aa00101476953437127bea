@@ -1,0 +1,10 @@
+package logica;
+
+public abstract class usuario {
+	protected String login;
+	protected String contrasena;
+	protected String nombre;
+	protected String correo;
+	protected double saldo;
+	
+}

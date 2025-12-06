@@ -1,0 +1,17 @@
+package Finanzas;
+
+import java.sql.Date;
+
+import logica.Tiquete;
+import logica.Usuario;
+
+public class Rembolso {
+	private String renombolso;
+	private Usuario usuario;
+	private Tiquete tiquete;
+	private double valor;
+	private Date fecha;
+	private String motivo;
+	
+	
+}

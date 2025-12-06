@@ -1,0 +1,4 @@
+admin01;1234;Carlos Pérez;admin@boleta.com;0
+organizador01;abcd;María Gómez;maria@eventos.com;5000
+cliente01;pass;Juan Rodríguez;juanr@gmail.com;120000
+cliente02;123;Laura Torres;laurita@hotmail.com;95000

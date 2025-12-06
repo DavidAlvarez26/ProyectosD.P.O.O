@@ -1,0 +1,300 @@
+package logica;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import Finanzas.Compra;
+import Finanzas.Oferta;
+import Finanzas.ReporteFinanciero;
+import Usuarios.Administrador;
+import Usuarios.Cliente;
+import Usuarios.Organizador;
+import persistencia.PersistenciaDatos;
+import Finanzas.Rembolso;
+
+public class BoletaMaster {
+	private List<Usuario> usuarios;
+	private List<Evento> eventos;
+	private List<Venue> venues;
+	private List<Compra> compras;
+	private List<Tiquete> tiquetes;
+	@SuppressWarnings("unused")
+	private Administrador administrador;
+	private PersistenciaDatos persistencia;
+	
+	public BoletaMaster(List<Usuario> usuarios, List<Evento> eventos, List<Venue> venues, List<Compra> compra,
+			Administrador administrador, PersistenciaDatos persistencia) {
+	    this.usuarios = new ArrayList<>();
+	    this.eventos = new ArrayList<>();
+	    this.venues = new ArrayList<>();
+	    this.compras = new ArrayList<>();
+	    this.tiquetes = new ArrayList<>();
+	    this.administrador = null;
+	    this.persistencia = persistencia;
+	}
+
+    public void cargarDatos() {
+        this.usuarios = persistencia.getPersistenciaUsuarios().cargarUsuarios("data/usuarios.txt");
+        this.eventos = persistencia.getPersistenciaEventos().cargarEventos("data/eventos.txt");
+        this.compras = persistencia.getPersistenciaCompras().cargarCompras("data/compras.txt");
+        this.venues = persistencia.getPersistenciaVenues().cargarVenues("data/venues.txt");
+        this.tiquetes = persistencia.getPersistenciaTiquetes().cargarTiquetes("data/tiquetes.txt");
+
+    }
+    public void guardarDatos() {
+        persistencia.getPersistenciaUsuarios().guardarUsuarios("data/usuarios1.txt", usuarios);
+        persistencia.getPersistenciaEventos().guardarEventos("data/eventos1.txt", eventos);
+        persistencia.getPersistenciaCompras().guardarCompras("data/compras1.txt", compras);
+        persistencia.getPersistenciaVenues().guardarVenues("data/venues1.txt", venues);
+        persistencia.getPersistenciaTiquetes().guardarTiquetes("data/tiquetes1.txt", tiquetes);
+
+        System.out.println("Datos guardados correctamente en los archivos.");
+    }
+
+	public void registrarUsuario(Usuario usuario) {
+        if (buscarUsuario(usuario.getLogin()) == null) {
+            usuarios.add(usuario);
+            System.out.println("Usuario registrado: " + usuario.getNombre());
+        } else {
+            System.out.println("Ya existe un usuario con ese login.");
+        }
+	}
+
+	public Usuario buscarUsuario(String login) {
+        for (Usuario u : usuarios) {
+            if (u.getLogin().equals(login)) {
+                return u;
+            }
+        }
+        return null;
+	}
+
+	public void eliminarUsuario(String login) {
+        Usuario u = buscarUsuario(login);
+        if (u != null) {
+            usuarios.remove(u);
+            System.out.println("Usuario eliminado: " + login);
+        } else {
+            System.out.println("No se encontró el usuario con login: " + login);
+        }
+	}
+
+	public void agregarEvento(Evento evento) {
+        if (buscarEvento(evento.getIdEvento()) == null) {
+            eventos.add(evento);
+            System.out.println("Evento agregado: " + evento.getNombre());
+        } else {
+            System.out.println("Ya existe un evento con ese ID.");
+        }
+	}
+
+	public Evento buscarEvento(String idEvento) {
+        for (Evento e : eventos) {
+            if (e.getIdEvento().equalsIgnoreCase(idEvento)) {
+                return e;
+            }
+        }
+        return null;
+	}
+
+	public List<Evento> consultarCatalogoEventos(String tipo, Date fecha, String ubicacion) {
+	    List<Evento> resultado = new ArrayList<>();
+	    for (Evento e : eventos) {
+	        boolean coincideTipo = (tipo == null || e.getTipo().equalsIgnoreCase(tipo));
+	        boolean coincideFecha = (fecha == null || e.getFecha().equals(fecha));
+	        boolean coincideUbicacion = (ubicacion == null || e.getVenue().getUbicacion().equalsIgnoreCase(ubicacion));
+
+	        if (coincideTipo && coincideFecha && coincideUbicacion) {
+	            resultado.add(e);
+	        }
+	    }
+	    return resultado;
+	}
+
+	public void comprarTiquete(Cliente cliente, Evento evento, Localidad localidad, int cantidad) {
+	    List<Tiquete> disponibles = localidad.obtenerTiquetesDisponibles();
+
+	    if (disponibles.size() < cantidad) {
+	        System.out.println("No hay suficientes tiquetes disponibles.");
+	        return;
+	    }
+
+	    double total = 0;
+	    for (int i = 0; i < cantidad; i++) {
+	        Tiquete t = disponibles.get(i);
+	        t.setComprador(cliente);
+	        t.setEstado("Vendido");
+	        cliente.getTiquetes().add(t);
+	        total += t.calcularPrecioTotal();
+	    }
+
+	    cliente.setSaldo(cliente.getSaldo() - total);
+	    System.out.println("Compra completada. Total pagado: $" + total);
+	}
+
+	public void transferirTiquete(Cliente origen, Cliente destino, Tiquete tiquete) {
+	    if (origen == null || destino == null || tiquete == null) {
+	        System.out.println("Datos inválidos para transferencia.");
+	        return;
+	    }
+
+	    if (!tiquete.esTransferible()) {
+	        System.out.println("Este tiquete no puede transferirse.");
+	        return;
+	    }
+
+	    origen.getTiquetes().remove(tiquete);
+	    destino.getTiquetes().add(tiquete);
+	    tiquete.marcarComoTranferido();
+
+	    System.out.println("Tiquete transferido exitosamente de " + origen.getNombre() + " a " + destino.getNombre());
+	}
+	
+
+	public void registrarCompra(Compra compra) {
+	    compras.add(compra);
+	}
+
+	public void cancelarEvento(Administrador admin, Evento evento, String motivo) {
+	    if (evento == null) return;
+	    evento.setEstado("Cancelado");
+	    for (Tiquete t : tiquetes) {
+	        if (t.getEvento().equals(evento)) {
+	            procesarReembolso(t, t.getComprador(), motivo);
+	        }
+	    }
+	    System.out.println("Evento cancelado y reembolsos procesados.");
+	}
+
+	public void procesarReembolso(Tiquete tiquete, Usuario usuario, String motivo) {
+	    if (tiquete == null || usuario == null) {
+	        System.out.println("No se puede procesar el reembolso: datos inválidos.");
+	        return;
+	    }
+
+	    String idReembolso = "R-" + System.currentTimeMillis();
+	    Rembolso reembolso = new Rembolso(
+	        idReembolso,
+	        usuario,
+	        tiquete,
+	        0, 
+	        new Date(System.currentTimeMillis()),
+	        motivo
+	    );
+
+	    double valor = reembolso.calcularValorReembolso();
+
+	    if (valor <= 0) {
+	        System.out.println("El reembolso no aplica para este caso (" + motivo + ").");
+	        return;
+	    }
+
+	    usuario.recargarSaldo(valor);
+	    tiquete.setEstado("Reembolsado");
+
+	    System.out.println(reembolso.generarComprobante());
+	}
+	
+	
+
+	public ReporteFinanciero generarReporteFinanciero(Administrador admin) {
+	    if (compras == null || compras.isEmpty()) {
+	        System.out.println("No hay compras registradas para generar el reporte.");
+	        return new ReporteFinanciero(0, new HashMap<>(), new HashMap<>());
+	    }
+
+	    ReporteFinanciero reporte = new ReporteFinanciero(0, new HashMap<>(), new HashMap<>());
+	    reporte.calcularGananciasTotales(eventos, compras);
+	    for (Evento e : eventos) {
+	        reporte.calcularGananciasPorEvento(e, compras);
+	        reporte.calcularGananciasPorOrganizador(e.getOrganizador(), compras);
+	    }
+	    System.out.println("Reporte financiero generado exitosamente.");
+	    System.out.println("Ganancia total: $" + reporte.getGananciasTotales());
+
+	    return reporte;
+	}
+
+	public void aplicarOferta(Evento evento, Localidad localidad, Oferta oferta) {
+	    if (evento == null || localidad == null || oferta == null) {
+	        System.out.println("No se puede aplicar la oferta. Datos inválidos.");
+	        return;
+	    }
+
+	    if (!oferta.esVigente()) {
+	        System.out.println("La oferta ya no está vigente.");
+	        return;
+	    }
+
+	    localidad.aplicarOferta(oferta);
+	    System.out.println("Oferta del " + oferta.getPorcentaje() + "% aplicada a la localidad " + localidad.getNombre() +
+	                       " del evento " + evento.getNombre());
+	}
+
+	public void proponerVenue(Organizador organizador, Venue venue) {
+	    if (venue != null) {
+	        venue.setAprobado(false);
+	        venues.add(venue);
+	        System.out.println("Venue propuesto por " + organizador.getNombre() + ": " + venue.getNombre());
+	    }
+	}
+
+	public void aprobarVenue(Administrador admin, Venue venue, boolean aprobar) {
+	    if (venue == null) {
+	        System.out.println("Error: el venue proporcionado no es válido.");
+	        return;
+	    }
+
+	    if (venue.esAprobado() && aprobar) {
+	        System.out.println("El venue '" + venue.getNombre() + "' ya fue aprobado anteriormente.");
+	        return;
+	    }
+
+	    venue.setAprobado(aprobar);
+
+	    if (aprobar) {
+	        System.out.println("El administrador " + admin.getNombre() +" ha aprobado el venue: " + venue.getNombre());
+	    } else {
+	        System.out.println("El administrador " + admin.getNombre() +" ha rechazado el venue: " + venue.getNombre());
+	    }
+	}
+
+	public void crearEvento(Organizador organizador, Evento evento) {
+	    if (evento.getVenue() == null || !evento.getVenue().esAprobado()) {
+	        System.out.println("No se puede crear el evento. El venue no está aprobado.");
+	        return;
+	    }
+
+	    eventos.add(evento);
+	    organizador.getEventosOrganizados().add(evento);
+
+	    System.out.println("Evento '" + evento.getNombre() + "' creado exitosamente por " +
+	                       organizador.getNombre());
+	}
+
+	public ReporteFinanciero generarReporteOrganizador(Organizador organizador) {
+	    if (organizador == null) {
+	        System.out.println("Organizador no válido.");
+	        return new ReporteFinanciero(0, new HashMap<>(), new HashMap<>());
+	    }
+
+	    ReporteFinanciero reporte = new ReporteFinanciero(0, new HashMap<>(), new HashMap<>());
+	    for (Evento e : eventos) {
+	        if (e.getOrganizador().equals(organizador)) {
+	            reporte.calcularGananciasPorEvento(e, compras);
+	        }
+	    }
+
+	    reporte.calcularGananciasPorOrganizador(organizador, compras);
+
+	    System.out.println("Reporte generado para el organizador " + organizador.getNombre() +
+	                       ". Ganancia total: $" + reporte.getGananciasTotales());
+
+	    return reporte;
+	}
+	
+	
+	
+}

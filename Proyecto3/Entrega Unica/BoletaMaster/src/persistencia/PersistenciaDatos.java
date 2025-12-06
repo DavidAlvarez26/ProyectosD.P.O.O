@@ -1,0 +1,23 @@
+package persistencia;
+
+public class PersistenciaDatos {
+    //private static final String PLAIN = "PlainText";
+
+    public IPersistenciaUsuarios getPersistenciaUsuarios() {
+        return new PersistenciaUsuarios();
+    }
+
+    public IPersistenciaEventos getPersistenciaEventos() {
+        return new PersistenciaEventos();
+    }
+
+    public IPersistenciaCompras getPersistenciaCompras() {
+        return new PersistenciaCompras();
+    }
+    public IPersistenciaVenues getPersistenciaVenues() {
+        return new PersistenciaVenues();
+    }
+    public IPersistenciaTiquetes getPersistenciaTiquetes() {
+        return new PersistenciaTiquetes();
+    }
+}

@@ -1,0 +1,41 @@
+package Finanzas;
+
+import java.sql.Date;
+
+public class Oferta {
+    private double porcentajeDescuento;// debe ser 0.0-1
+    private Date fechaInicio;
+    private Date fechaFin;
+
+    public Oferta(double porcentajeDescuento, Date fechaInicio, Date fechaFin) {
+        this.porcentajeDescuento = porcentajeDescuento;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
+   
+
+    public double getPorcentaje() {
+		return porcentajeDescuento*100;
+	}
+
+
+
+	public void setPorcentaje(double porcentaje) {
+		this.porcentajeDescuento = porcentaje;
+	}
+
+
+
+	public boolean esVigente() {
+        Date hoy = new Date(System.currentTimeMillis());
+        return (hoy.after(fechaInicio) && hoy.before(fechaFin));
+    }
+	public double aplicarDescuento(double precioBase) {
+        if (esVigente()) {
+            return precioBase * (1 - porcentajeDescuento);
+        } else {
+            return precioBase; 
+        }
+		}
+}

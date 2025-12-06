@@ -1,0 +1,143 @@
+package logica;
+
+import java.sql.Time;
+import java.util.List;
+
+import Finanzas.Oferta;
+import Usuarios.Organizador;
+
+import java.sql.Date;
+
+public class Evento {
+	private String idEvento;
+	private String nombre;
+	private Date fecha;
+	private Time hora;
+	private String tipo;
+	private Venue venue;
+	private Organizador organizador;
+	private List<Localidad> localidades;
+	private String estado;
+	
+	public Evento(String idEvento, String nombre, Date fecha, Time hora, String tipo, Venue venue,
+			Organizador organizador, List<Localidad> localidades, String estado) {
+		this.idEvento = idEvento;
+		this.nombre = nombre;
+		this.fecha = fecha;
+		this.hora = hora;
+		this.tipo = tipo;
+		this.venue = venue;
+		this.organizador = organizador;
+		this.localidades = localidades;
+		this.estado = estado;
+	}
+
+	public String getIdEvento() {
+		return idEvento;
+	}
+
+	public void setIdEvento(String idEvento) {
+		this.idEvento = idEvento;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public Time getHora() {
+		return hora;
+	}
+
+	public void setHora(Time hora) {
+		this.hora = hora;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public Venue getVenue() {
+		return venue;
+	}
+
+	public void setVenue(Venue venue) {
+		this.venue = venue;
+	}
+
+	public Organizador getOrganizador() {
+		return organizador;
+	}
+
+	public void setOrganizador(Organizador organizador) {
+		this.organizador = organizador;
+	}
+
+	public List<Localidad> getLocalidades() {
+		return localidades;
+	}
+
+	public void setLocalidades(List<Localidad> localidades) {
+		this.localidades = localidades;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+	public void agregarLocalidad(Localidad localidad) {
+	    if (localidad != null && !localidades.contains(localidad)) {
+	        localidades.add(localidad);
+	    }
+	}
+	public Localidad buscarLocalidad(String nombre) {
+	    for (Localidad l : localidades) {
+	        if (l.getNombre().equalsIgnoreCase(nombre)) {
+	            return l;
+	        }
+	    }
+	    return null;
+	}
+	public int calcularDisponibilidad() {
+	    int totalDisponible = 0;
+	    for (Localidad l : localidades) {
+	        totalDisponible += l.calcularCapacidadDisponible();
+	    }
+	    return totalDisponible;
+	}
+	public void aplicarDescuento(Oferta oferta) {
+	    if (oferta != null && oferta.esVigente()) {
+	        for (Localidad l : localidades) {
+	            l.aplicarOferta(oferta);
+	        }
+	    }
+	}
+	public double obtenerGanancias() {
+        double total = 0;
+        for (Localidad l : localidades) {
+            for (Tiquete t : l.getTiquetes()) {
+                total += t.calcularPrecioTotal();
+            }
+        }
+        return total;
+    }
+}
